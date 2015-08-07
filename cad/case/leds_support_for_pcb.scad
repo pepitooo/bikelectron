@@ -42,30 +42,34 @@ module handle() {
 
 module wire_pass_through(diameter) {
   //rotate([90,270,90])
-  translate([14.1,0,1])
+  translate([16.1,0,1])
   rotate([0,270,0]) {
     //difference() {
     //  cube([9,6,3]);
       translate([3,3,-.1])
-        cylinder(h = 11, d=diameter);
+        cylinder(h = 17, d=diameter);
       translate([6,3,-.1])
-        cylinder(h = 11, d=diameter);
+        cylinder(h = 17, d=diameter);
       translate([4.5,3,-.1])
-        cylinder(h = 11, d=diameter-1);
+        cylinder(h = 17, d=diameter-1);
     }
 }
 
-module led_window() {
+module led_window(leftSideWindows = false) {
   color([1,0.7,0.5])
-    //translate([12.5,-.1,2])
-    translate([13.5,1.1,2])
-      cube([10,5,5]);
+    if(leftSideWindows) {
+      translate([12.5,-.1,2])
+          cube([10,5,5]);
+    } else {
+      translate([13.5,1.1,2])
+          cube([10,5,5]);
+    }
 }
 
-module case() {  
+module case(leftSideWindows = false) {  
   difference() {
     cube(top_block);
-    led_window();
+    led_window(leftSideWindows);
     wire_pass_through(wire_hole_diameter);
     translate([7,2,1]) pcb(pcb_thickness);
     translate([30 / 2, 0, 2]) {
@@ -75,23 +79,23 @@ module case() {
   }
 }
 
-module slide_case() {
+module slide_case(leftSideWindows) {
   //bottom part
   translate([0,10,0])
   difference() {
-    case();
+    case(leftSideWindows);
     translate([3,-0.5,2]) cube([25,7,11]);
   }  
   
   rotate([180,0,0])
     translate([0,-6,-10])
   difference() {
-    case();
+    case(leftSideWindows);
     translate([-.5,-0.5,-8.99]) cube([31,7,11]);
     translate([-.5,-0.5,]) cube([3,7,3]);
     translate([28,-0.5,]) cube([3,7,3]);
   }
 }
 
-slide_case();
+slide_case(false);
 
